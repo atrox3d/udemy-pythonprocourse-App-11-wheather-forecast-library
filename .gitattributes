@@ -1,0 +1,19 @@
+# force LF for working-tree, index and repo
+# https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/
+# https://stackoverflow.com/a/62554246
+
+# 1) create .giattributes
+# 2) add the following line
+* text=auto eol=lf
+
+# 3) run the following commands
+# git rm --cached -r .
+# git reset --hard
+
+# 4) check with this command
+# git ls-files --eol
+
+# 5) optional - run this command
+# git git add --renormalize .
+
+
