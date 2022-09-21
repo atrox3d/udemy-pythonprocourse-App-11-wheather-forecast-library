@@ -12,7 +12,8 @@ class EndPoint:
         self.params = kwargs                                                    # save params
         params = []
         for k, v in kwargs.items():
-            params += [f"{k}={v}"]                                              # build list of params
+            if v is not None:
+                params += [f"{k}={v}"]                                          # build list of params
         queryparams = "&".join(params)                                          # build query string
 
         url = f'{self.base_url}?{queryparams}'                                  # build url
