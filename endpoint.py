@@ -24,10 +24,20 @@ class OpenWeatherMapEndPoint(EndPoint):
 
     api_key = secret.openweathermap.API_KEY
 
-    def get_url(self, city, country_code=None, units=None, lang=None, **kwargs):
+    def get_url(self, city=None, country_code=None, lat=None, lon=None, units=None, lang=None, **kwargs):
         params = {}
 
-        params['q'] = f'{city},{country_code}' if country_code else f'{city}'   # add city and country code, if present
+        if city:
+            if country_code:
+                params['q'] = f'{city},{country_code}'                          # add city and country code, if present
+            else:
+                params['q'] = f'{city}'
+        elif lat and lon:
+            params['lat'] = lat
+            params['lon'] = lon
+        else:
+            print("ERROR | provide either city or lat and lon arguments")
+            exit(1)
         if units:
             params['units'] = units                                             # add units, if present
         if lang:
