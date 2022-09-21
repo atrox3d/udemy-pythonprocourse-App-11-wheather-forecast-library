@@ -35,9 +35,10 @@ class Weather:
     def _update(self):
         self._buildurl()
         response = requests.get(self.url)
-        response.raise_for_status()
+        # response.raise_for_status()
         self.data = response.json()
-        self.cache.save(self.url, self.data)
+        if self.data['cod'] == '200':
+            self.cache.save(self.url, self.data)
 
     def _load(self):
         self.data = self.cache.load()
@@ -47,6 +48,9 @@ class Weather:
             self._load()
         else:
             self._update()
+
+        if self.data['cod'] != '200':
+            raise ValueError(self.data['message'])
 
         data = self.data['list'][:round(hours/3)]
 
