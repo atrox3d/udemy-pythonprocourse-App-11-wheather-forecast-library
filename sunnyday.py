@@ -1,11 +1,11 @@
-from endpoint import EndPoint
+from endpoint import OpenWeatherMapEndPoint
 
-current_weather = EndPoint(
+current_weather = OpenWeatherMapEndPoint(
     base_url='https://api.openweathermap.org/data/2.5/weather',
     docs='https://openweathermap.org/current',
 )
 
-forecast = EndPoint(
+forecast = OpenWeatherMapEndPoint(
     base_url='https://api.openweathermap.org/data/2.5/forecast',
     docs='https://openweathermap.org/forecast5',
 )
