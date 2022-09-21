@@ -39,7 +39,8 @@ class Weather:
         return self.data['list'][:4]
 
 
-w = Weather(city='Nichelino', country_code='it')
+# w = Weather(city='Nichelino', country_code='it')
+w = Weather()
 print(w.url)
 print(
     json.dumps(

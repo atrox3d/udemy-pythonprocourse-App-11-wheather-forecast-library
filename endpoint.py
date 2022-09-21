@@ -36,9 +36,7 @@ class OpenWeatherMapEndPoint(EndPoint):
             params['lat'] = lat                                                 # alternatively add lat and lon
             params['lon'] = lon
         else:
-            print("ERROR | provide either city or lat and lon arguments")
-            exit(1)
-
+            raise TypeError('Provide either a city or lat and lon argument')
         if units:
             params['units'] = units                                             # add units, if present
         if lang:
