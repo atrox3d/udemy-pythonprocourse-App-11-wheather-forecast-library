@@ -42,33 +42,37 @@ class Weather:
     def _load(self):
         self.data = self.cache.load()
 
-    def next24h(self, from_cache=False):
+    def next_n_hours(self, hours, simplified=False, from_cache=False):
         if from_cache:
             self._load()
         else:
             self._update()
-        return self.data['list'][:8]
 
-    def next24hsimplified(self, from_cache=False):
-        if from_cache:
-            self._load()
+        data = self.data['list'][:round(hours/3)]
+
+        if simplified:
+            lines = []
+            for item in data:
+                elements = []
+                elements.append(item['dt_txt'])
+                elements.append(item['main']['temp'])
+                elements.append(item['weather'][0]['description'])
+                elements = map(str, elements)
+                line = ' | '.join(elements)
+                lines += [line]
+
+            return '\n'.join(lines)
         else:
-            self._update()
-        lines = []
-        for item in self.data['list'][:8]:
-            # line = ''
-            elements = []
-            elements.append(item['dt_txt'])
-            elements.append(item['main']['temp'])
-            elements.append(item['weather'][0]['description'])
-            elements = map(str, elements)
-            line = ' | '.join(elements)
-            lines += [line]
+            return data
 
-        return '\n'.join(lines)
+    def next12h(self, from_cache=False):
+        return self.next_n_hours(12, simplified=False, from_cache=from_cache)
+
+    def next12hsimplified(self, from_cache=False):
+        return self.next_n_hours(12, simplified=True, from_cache=from_cache)
 
 
 w = Weather(city='Nichelino', country_code='it', lang='it')
 print(w.url)
 # print(json.dumps(w.next12h(from_cache=True), indent=4))
-print(w.next24hsimplified(from_cache=True))
+print(w.next12hsimplified(from_cache=True))
