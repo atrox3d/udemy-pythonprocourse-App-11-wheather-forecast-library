@@ -31,13 +31,14 @@ class OpenWeatherMapEndPoint(EndPoint):
             if country_code:
                 params['q'] = f'{city},{country_code}'                          # add city and country code, if present
             else:
-                params['q'] = f'{city}'
+                params['q'] = f'{city}'                                         # or just the city
         elif lat and lon:
-            params['lat'] = lat
+            params['lat'] = lat                                                 # alternatively add lat and lon
             params['lon'] = lon
         else:
             print("ERROR | provide either city or lat and lon arguments")
             exit(1)
+
         if units:
             params['units'] = units                                             # add units, if present
         if lang:
