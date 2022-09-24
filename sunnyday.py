@@ -1,12 +1,14 @@
 import requests as requests
-import json
 
 from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
 
 
 class Weather:
-
+    """
+    Creates a Weather object using as input either a city name (and optional contry code) or latitude and
+    longitude coordinates
+    """
     def __init__(self, city=None, country_code=None, lat=None, lon=None, units='metric', **kwargs):
         self.city = city
         self.country_code = country_code
@@ -79,4 +81,4 @@ class Weather:
 w = Weather(city='Nichelino', country_code='it', lang='it')
 print(w.url)
 # print(json.dumps(w.next12h(from_cache=True), indent=4))
-print(w.next12hsimplified(from_cache=True))
+print(w.next12hsimplified(from_cache=False))
