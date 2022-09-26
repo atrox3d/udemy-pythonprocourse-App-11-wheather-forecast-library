@@ -5,7 +5,7 @@ import requests as requests
 
 from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
-from options import WeatherOptions
+from weather_options import WeatherOptions
 
 
 class Weather:
