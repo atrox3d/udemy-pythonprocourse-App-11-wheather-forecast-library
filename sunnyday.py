@@ -5,6 +5,7 @@ import requests as requests
 
 from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
+from options import WeatherOptions
 
 
 class Weather:
@@ -86,55 +87,10 @@ if __name__ == '__main__':
     # print(w.url)
     # print(json.dumps(w.next12h(from_cache=True), indent=4))
     # print(w.next12hsimplified(from_cache=False))
-    print(sys.argv[1:])
-    opts, args = getopt.getopt(
-        sys.argv[1:],
-        "c:C:l:h:",
-        [
-            'city=',
-            'country_code=',
-            'lat=',
-            'lon=',
-            'lang=',
-            'hours=',
-            'simplified',
-            'from_cache'
-        ]
-    )
-    print('opts | ', opts)
-    print('args | ', args)
-
-    WEATHER_OPTS = [
-            '--city',
-            '--country_code',
-            '--lat=',
-            '--lon=',
-            '--lang=',
-    ]
-
-    NEXT_OPTS = [
-        '--hours',
-        '--simplified',
-        '--from_cache'
-    ]
-
-    weather_opts = {t[0].replace('--', ''): t[1] for t in opts if t[0].startswith('--') if t[0] in WEATHER_OPTS}
-    print('weather_opts | ', weather_opts)
-    print('WEATHER_OPTS | ', WEATHER_OPTS)
+    wo = WeatherOptions()
+    weather_opts, next_opts = wo.parse()
     w = Weather(**weather_opts)
     print(w.url)
 
-    next_opts = {t[0].replace('--', ''): True if not t[1] else t[1] for t in opts if t[0].startswith('--') if t[0] in NEXT_OPTS}
-    print('NEXT_OPTS | ', NEXT_OPTS)
-    print('next_opts | ', next_opts)
-    if next_opts.get('hours'):
-        next_opts['hours'] = int(next_opts['hours'])
-    default_next_ops = {
-        'hours': 12,
-        'simplified': True,
-        'from_cache': False
-    }
-    default_next_ops.update(next_opts)
-    print('default_next_opts | ', default_next_ops)
-    print(w.next_n_hours(**default_next_ops))
+    print(w.next_n_hours(**next_opts))
 
