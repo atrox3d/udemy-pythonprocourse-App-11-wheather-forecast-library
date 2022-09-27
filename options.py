@@ -4,7 +4,7 @@ import sys
 
 class Option:
 
-    def __init__(self, name: str, value=None):
+    def __init__(self, name: str, default=None):
         """
         create an Option object from a tuple option name, option value
         like getopt return value,
@@ -19,7 +19,7 @@ class Option:
         else:
             self.name = name
             self.dashname = '--' + self.name
-        self.value = value
+        self.value = default
 
     def dictitem(self, dash=False):
         return {self.dashname if dash else self.name: self.value}
@@ -27,28 +27,36 @@ class Option:
     def tuple(self, dash=False):
         return self.dashname if dash else self.name, self.value
 
+    def longopt(self):
+        return f'{self.name}='
+
 
 class Flag(Option):
 
-    def __init__(self, name, value=True):
-        super().__init__(name, value)
+    def __init__(self, name, default=True):
+        super().__init__(name, default)
+
+    def longopt(self):
+        return self.name
 
 
 class Options:
     def __init__(self, options):
         self.options = []
+        if isinstance(options, str):
+            options = options.split()
+
         for option in options:
-            if not isinstance(option, tuple):
-                raise TypeError
-            if len(option) != 2:
-                raise ValueError
-            if option[1]:
-                self.options.append(Option(*option))
+            if option.endswith('='):
+                self.options.append(Option(option[:-1]))
             else:
-                self.options.append(Flag(option[0]))
+                self.options.append(Flag(option))
     #
     # def dictitems(self):
     #     return list(map(lambda x: x.dictitem(), self.options))
+
+    def longopts(self):
+        return [option.longopt() for option in self.options]
 
     def dict(self):
         return dict(self.tuples())
@@ -72,10 +80,11 @@ def test():
 
 if __name__ == '__main__':
     # test()
-    params = ['--city', 'nichelino']
-    opts, args = getopt.getopt(params, '', 'city=')
+    longopts = 'city= debug'
+    options = Options(longopts)
+    print(options.longopts())
+
+    cmdlineparams = '--city nichelino --debug'.split()
+    opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
     print(opts, args)                                       # [('--city', 'nichelino')] []
 
-    options = Options(opts)
-    print(f'options  : {options.tuples()} | {options.dict()}')
-    print(f'options  : {options.tuples()} | {options.dict()}')
