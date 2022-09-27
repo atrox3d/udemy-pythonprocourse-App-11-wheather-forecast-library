@@ -5,8 +5,7 @@ import requests as requests
 
 from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
-# from weather_options import WeatherOptions
-from options import Options
+from longoptions import LongOptions
 
 class Weather:
     """
@@ -83,38 +82,25 @@ class Weather:
 
 
 if __name__ == '__main__':
-    # w = Weather(city='Nichelino', country_code='it', lang='it')
-    # print(w.url)
-    # print(json.dumps(w.next12h(from_cache=True), indent=4))
-    # print(w.next12hsimplified(from_cache=False))
-    """
-    wo = WeatherOptions()
-    weather_opts, next_opts = wo.parse()
-    w = Weather(**weather_opts)
-    print(w.url)
-
-    print(w.next_n_hours(**next_opts))
-    """
-    weather_options = [
+    weather_options = [                                                         # options for weather class
         'city=',
         'country_code=',
         'lat=',
         'lon=',
         'lang=',
     ]
-    next_options = [
+    next_options = [                                                            # options for next_n_hours()
         'hours=',
         'simplified',
         'from_cache'
     ]
+    long_options = weather_options + next_options                               # all options
 
-    long_options = weather_options + next_options
-    options = Options(long_options)
+    options = LongOptions(long_options)                                             # create Options object
+    opts, args = getopt.getopt(sys.argv[1:], None, options.longopts())          # use object with getopt
 
-    opts, args = getopt.getopt(sys.argv[1:], None, options.longopts())
-
-    weather_kwargs = options.evaluate(opts, filter=weather_options)
-    next_kwargs = options.evaluate(opts, filter=next_options)
+    weather_kwargs = options.evaluate(opts, filter=weather_options)             # get kwargs for weather class
+    next_kwargs = options.evaluate(opts, filter=next_options)                   # get kwargs for next_n_hours()
 
     w = Weather(**weather_kwargs)
     print(w.next_n_hours(**next_kwargs))
