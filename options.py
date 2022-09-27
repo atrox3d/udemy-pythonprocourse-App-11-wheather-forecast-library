@@ -36,11 +36,11 @@ class Option:
 
 class Flag(Option):
 
-    def __init__(self, name, default=True):
+    def __init__(self, name, default=False):
         super().__init__(name, default)
 
-    def update(self, name, value):
-        super().update(name, True)
+    def update(self, name, value=False):
+        super().update(name, value)
 
     def longopt(self):
         return self.name

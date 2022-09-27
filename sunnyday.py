@@ -1,12 +1,12 @@
-import getopt
 import sys
+import getopt
 
 import requests as requests
 
 from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
-from weather_options import WeatherOptions
-
+# from weather_options import WeatherOptions
+from options import Options
 
 class Weather:
     """
@@ -87,10 +87,33 @@ if __name__ == '__main__':
     # print(w.url)
     # print(json.dumps(w.next12h(from_cache=True), indent=4))
     # print(w.next12hsimplified(from_cache=False))
+    """
     wo = WeatherOptions()
     weather_opts, next_opts = wo.parse()
     w = Weather(**weather_opts)
     print(w.url)
 
     print(w.next_n_hours(**next_opts))
+    """
+    weather_options = [
+        'city=',
+        'country_code=',
+        'lat=',
+        'lon=',
+        'lang=',
+    ]
+    next_options = [
+        'hours=',
+        'simplified',
+        'from_cache'
+    ]
 
+    long_options = weather_options + next_options
+    options = Options(long_options)
+    print(options.get_dict())
+
+    print(options.longopts())
+    cmdlineparams = '--city nichelino --country_code it --simplified'.split()
+    print(cmdlineparams)
+    opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
+    print(f'opts: {opts}, args: {args}')
