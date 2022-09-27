@@ -62,16 +62,24 @@ class Options:
     def longopts(self):
         return [option.longopt() for option in self.options.values()]
 
-    def evaluate(self, opts):
+    def evaluate(self, opts, filter=None):
         for name, val in opts:
             if option := self.options.get(name[2:]):
                 option.update(name, val)
+        if filter:
+            return self.filter(filter)
+        else:
+            return self.get_dict(True)
 
     def get_dict(self, notNone=False):
         if notNone:
             return {key: val for option in self.options.values() for key, val in option.dictitem().items() if val}
         else:
             return {key: val for option in self.options.values() for key, val in option.dictitem().items()}
+
+    def filter(self, names, notNone=True):
+        kwargs = {key: val for key, val in self.get_dict(notNone).items() if key + '=' in names or key in names}
+        return kwargs
 
 
 if __name__ == '__main__':

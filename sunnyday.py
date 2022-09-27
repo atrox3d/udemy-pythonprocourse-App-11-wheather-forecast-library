@@ -58,7 +58,7 @@ class Weather:
         if self.data['cod'] != '200':
             raise ValueError(self.data['message'])
 
-        data = self.data['list'][:round(hours/3)]
+        data = self.data['list'][:round(int(hours)/3)]
 
         if simplified:
             lines = []
@@ -109,16 +109,12 @@ if __name__ == '__main__':
     ]
 
     long_options = weather_options + next_options
-    print(f'long_options     : {long_options}')
     options = Options(long_options)
-    print(f'options.get_dict : {options.get_dict()}')
-    print(f'options.longopts : {options.longopts()}')
 
-    cmdlineparams = '--city nichelino --country_code it --simplified'.split()
-    print(f'cmdlineparams    : {cmdlineparams}')
+    opts, args = getopt.getopt(sys.argv[1:], None, options.longopts())
 
-    opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
-    print(f'opts: {opts}\nargs: {args}')
+    weather_kwargs = options.evaluate(opts, filter=weather_options)
+    next_kwargs = options.evaluate(opts, filter=next_options)
 
-    options.evaluate(opts)
-    print(options.get_dict(notNone=True))
+    w = Weather(**weather_kwargs)
+    print(w.next_n_hours(**next_kwargs))
