@@ -40,7 +40,7 @@ class Flag(Option):
         super().__init__(name, default)
 
     def update(self, name, value=False):
-        super().update(name, value)
+        super().update(name, value if value is False else True)
 
     def longopt(self):
         return self.name
@@ -67,8 +67,11 @@ class Options:
             if option := self.options.get(name[2:]):
                 option.update(name, val)
 
-    def get_dict(self):
-        return {key: val for option in self.options.values() for key, val in option.dictitem().items()}
+    def get_dict(self, notNone=False):
+        if notNone:
+            return {key: val for option in self.options.values() for key, val in option.dictitem().items() if val}
+        else:
+            return {key: val for option in self.options.values() for key, val in option.dictitem().items()}
 
 
 if __name__ == '__main__':

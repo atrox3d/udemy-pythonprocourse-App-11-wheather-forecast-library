@@ -109,11 +109,16 @@ if __name__ == '__main__':
     ]
 
     long_options = weather_options + next_options
+    print(f'long_options     : {long_options}')
     options = Options(long_options)
-    print(options.get_dict())
+    print(f'options.get_dict : {options.get_dict()}')
+    print(f'options.longopts : {options.longopts()}')
 
-    print(options.longopts())
     cmdlineparams = '--city nichelino --country_code it --simplified'.split()
-    print(cmdlineparams)
+    print(f'cmdlineparams    : {cmdlineparams}')
+
     opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
-    print(f'opts: {opts}, args: {args}')
+    print(f'opts: {opts}\nargs: {args}')
+
+    options.evaluate(opts)
+    print(options.get_dict(notNone=True))
