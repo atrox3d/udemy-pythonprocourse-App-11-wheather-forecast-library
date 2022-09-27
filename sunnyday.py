@@ -7,6 +7,7 @@ from endpoint import OpenWeatherMapEndPoint
 from cache import Cache
 from longoptions import LongOptions
 
+
 class Weather:
     """
     Creates a Weather object using as input either a city name (and optional contry code) or latitude and

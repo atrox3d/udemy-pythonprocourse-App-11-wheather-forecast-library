@@ -2,7 +2,9 @@ import secret.openweathermap
 
 
 class EndPoint:
-
+    """
+    represents a generic API endpoint with query parameters
+    """
     def __init__(self, base_url, docs):
         self.base_url = base_url
         self.docs = docs
@@ -21,7 +23,12 @@ class EndPoint:
 
 
 class OpenWeatherMapEndPoint(EndPoint):
+    """
+    represents an OpenWeatherMap endpoint
+    subclass of EndPoint
 
+    API KEY is in secret.openweathermap module, not tracked in git
+    """
     api_key = secret.openweathermap.API_KEY
 
     def get_url(self, city=None, country_code=None, lat=None, lon=None, units=None, lang=None, **kwargs):
