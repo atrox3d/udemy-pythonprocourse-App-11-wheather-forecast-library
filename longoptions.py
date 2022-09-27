@@ -130,7 +130,7 @@ if __name__ == '__main__':
     print(f'options.options   : {options.options}')
     print(f'options.longopts(): {options.longopts()}')
 
-    cmdlineparams = '--city nichelino --debug'.split()
+    cmdlineparams = '--city turin --debug'.split()
     opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
     print(f'opts: {opts}, args: {args}')                                        # [('--city', 'nichelino'), ('--debug', '')] []
 
