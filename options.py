@@ -13,13 +13,16 @@ class Option:
         :param name:
         :param value:
         """
+        self.update(name, default)
+
+    def update(self, name, value):
         if name.startswith('--'):                                               # save either normal and double dash
             self.name = name[2:]
             self.dashname = self.name
         else:
             self.name = name
             self.dashname = '--' + self.name
-        self.value = default
+        self.value = value
 
     def dictitem(self, dash=False):
         return {self.dashname if dash else self.name: self.value}
@@ -36,55 +39,47 @@ class Flag(Option):
     def __init__(self, name, default=True):
         super().__init__(name, default)
 
+    def update(self, name, value):
+        super().update(name, True)
+
     def longopt(self):
         return self.name
 
 
 class Options:
     def __init__(self, options):
-        self.options = []
+        self.options = {}
         if isinstance(options, str):
             options = options.split()
 
         for option in options:
-            if option.endswith('='):
-                self.options.append(Option(option[:-1]))
+            if option.endswith('='):                                            # build option
+                name = option[:-1]
+                self.options.update({name: Option(name)})
             else:
-                self.options.append(Flag(option))
-    #
-    # def dictitems(self):
-    #     return list(map(lambda x: x.dictitem(), self.options))
+                self.options.update({option: Flag(option)})                     # build flag
 
     def longopts(self):
-        return [option.longopt() for option in self.options]
+        return [option.longopt() for option in self.options.values()]
 
-    def dict(self):
-        return dict(self.tuples())
+    def evaluate(self, opts):
+        for name, val in opts:
+            if option := self.options.get(name[2:]):
+                option.update(name, val)
 
-    def tuples(self):
-        return list(map(lambda x: x.tuple(), self.options))
-
-
-def test():
-    opt = Option('city', 'turin')
-    print(f'option: {opt.dictitem()} | {opt.tuple()}')
-    flag = Flag('debug')
-    print(f'flag  : {flag.dictitem()} |  {flag.tuple()}')
-    opt = Option('--contry', 'it')
-    print(f'option: {opt.dictitem()} | {opt.tuple()}')
-    flag = Flag('--simple')
-    print(f'flag  : {flag.dictitem()} |  {flag.tuple()}')
-    opts = Options(('city', 'nichelino'), ('debug', ''), ('--simple', ''))
-    print(f'opts  : {opts.tuples()} | {opts.dict()}')
+    def get_dict(self):
+        return {key: val for option in self.options.values() for key, val in option.dictitem().items()}
 
 
 if __name__ == '__main__':
-    # test()
     longopts = 'city= debug'
     options = Options(longopts)
-    print(options.longopts())
+    print(f'options.options   : {options.options}')
+    print(f'options.longopts(): {options.longopts()}')
 
     cmdlineparams = '--city nichelino --debug'.split()
     opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
-    print(opts, args)                                       # [('--city', 'nichelino')] []
+    print(f'opts: {opts}, args: {args}')                                        # [('--city', 'nichelino'), ('--debug', '')] []
 
+    options.evaluate(opts)
+    print(options.get_dict())
