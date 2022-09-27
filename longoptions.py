@@ -134,5 +134,4 @@ if __name__ == '__main__':
     opts, args = getopt.getopt(cmdlineparams, None, options.longopts())
     print(f'opts: {opts}, args: {args}')                                        # [('--city', 'nichelino'), ('--debug', '')] []
 
-    options.evaluate(opts)
-    print(options.get_dict())
+    print(options.evaluate(opts))
