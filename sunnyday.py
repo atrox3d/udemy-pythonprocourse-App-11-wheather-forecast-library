@@ -96,7 +96,7 @@ if __name__ == '__main__':
     ]
     long_options = weather_options + next_options                               # all options
 
-    options = LongOptions(long_options)                                             # create Options object
+    options = LongOptions(long_options)                                         # create Options object
     opts, args = getopt.getopt(sys.argv[1:], None, options.longopts())          # use object with getopt
 
     weather_kwargs = options.evaluate(opts, filter=weather_options)             # get kwargs for weather class
