@@ -89,6 +89,7 @@ if __name__ == '__main__':
         'lat=',
         'lon=',
         'lang=',
+        'units=',
     ]
     next_options = [                                                            # options for next_n_hours()
         'hours=',
@@ -104,4 +105,5 @@ if __name__ == '__main__':
     next_kwargs = options.evaluate(opts, filter=next_options)                   # get kwargs for next_n_hours()
 
     w = Weather(**weather_kwargs)
+    print(w.url)
     print(w.next_n_hours(**next_kwargs))
